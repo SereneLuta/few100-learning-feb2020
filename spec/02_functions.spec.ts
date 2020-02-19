@@ -161,3 +161,85 @@ describe('some methods that return a single (scalar) value', () => {
 
     });
 });
+
+describe('a couple of examples', () => {
+    it('working with something other than integers', () => {
+        interface Vehicle { vin: string; make: string; model: string; year: number; mileage: number; }
+        const data: Vehicle[] = [
+            { vin: '3893839', make: 'Ford', model: 'Explorer', year: 2013, mileage: 100_013 },
+            { vin: '7038938', make: 'Honda', model: 'Pilot', year: 2019, mileage: 1_323 },
+            { vin: '8399393', make: 'Chevy', model: 'Bolt', year: 2018, mileage: 223_338 }
+        ];
+
+        // YOUR CODE HERE
+        // Using on statement, find all the vehciles that have more that 100_000 miles and give me the make and model as below.
+
+        const results = data.filter(n => n.mileage > 100000).map(n => `${n.make} ${n.model}`);
+
+        expect(results).toEqual(['Ford Explorer', 'Chevy Bolt']);
+
+        // another on to try what is the total mileage of all vehicles older than 2015?
+
+        const totalMileageOver2019 = data.filter(n => n.year > 2015).map(n => n.mileage).reduce((state, next) => state + next);
+
+        expect(totalMileageOver2019).toBe(1323 + 223338);
+
+        // state of application is the sum of all meaningful data
+    });
+});
+
+it('simple redux for dummies', () => {
+
+    interface State {
+        count: number;
+    }
+
+    const initialState: State = {
+        count: 0
+    };
+
+    interface Action { type: string; }
+
+    class Increment implements Action {
+        readonly type = 'Increment';
+    }
+
+    class Decrement implements Action {
+        readonly type = 'Decrement';
+    }
+    class Reset implements Action {
+        readonly type = 'Reset';
+    }
+
+    const allTheThingsThatHappened: Action[] = [
+        new Increment(),
+        new Increment(),
+        new Increment(),
+        new Increment(),
+        new Reset(),
+        new Increment(),
+        new Increment(),
+        new Increment(),
+        new Decrement(),
+        new Increment()
+    ];
+
+    const finalCount = allTheThingsThatHappened.reduce((s: State, n: Action) => {
+        switch (n.type) {
+            case 'Increment':
+                return {
+                    count: s.count + 1
+                };
+            case 'Decrement':
+                return {
+                    count: s.count - 1
+                };
+
+            case 'Reset': {
+                return initialState;
+            }
+        }
+    }, initialState);
+
+    expect(finalCount.count).toBe(3);
+});:
